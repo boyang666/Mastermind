@@ -54,7 +54,7 @@ public class AutoSolveService {
 				combinations.remove(indexToDelete.get(j).intValue());
 			}
 			
-			int next = chooseNext(combinations);
+			int next = chooseNext(combinations, numColor);
 			combination = combinations.get(next);
 			steps.add(combination);
 			combinations.remove(next);
@@ -73,6 +73,55 @@ public class AutoSolveService {
 	public static int chooseNext(ArrayList<int[]> combinations){
 		Random random = new Random();
 		int index = random.nextInt(combinations.size());
+		return index;
+	}
+	
+	public static int chooseNext(ArrayList<int[]> combinations, int numColor){
+		
+		// to stock all minimum count 
+		int[] minEtat = new int[combinations.size()];
+		
+		//to stock the result matrix
+		for(int i=0; i<combinations.size(); i++){
+			
+			//compute all possible results
+			HashMap<Integer, Integer> matrix = new HashMap<Integer, Integer>();
+			for(int j=0; j<combinations.size(); j++){
+				if(i != j){
+					HashMap<String, Integer> eval = CalculateService.evaluate(combinations.get(i), combinations.get(j), numColor);
+					int hit = eval.get("hit");
+					int pseudoHit = eval.get("pseudoHit");
+					int key = hit * 10 + pseudoHit;
+					if(matrix.containsKey(key)){
+						int count = matrix.get(key);
+						count++;
+						matrix.put(key, count);
+					}else{
+						matrix.put(key, 1);
+					}
+				}
+			}
+			
+			//get the minimum count of all possible results
+			int min = Integer.MAX_VALUE;
+			for(Integer value : matrix.values()){
+				if(value < min){
+					min = value;
+				}
+			}
+			minEtat[i] = min;
+		}
+		
+		// choose the maximum of all minimum
+		int index = -1;
+		int max = Integer.MIN_VALUE;
+		for(int i=0; i<minEtat.length; i++){
+			if(max < minEtat[i]){
+				max = minEtat[i];
+				index = i;
+			}
+		}
+		
 		return index;
 	}
 	

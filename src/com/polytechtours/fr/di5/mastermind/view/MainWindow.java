@@ -443,7 +443,7 @@ public class MainWindow extends JFrame implements ActionListener {
 		}
 		
 		// click of the solve button
-		if(e.getSource().equals(solveButton)){
+		if(e.getSource().equals(solveButton) && !solved){
 			ArrayList<int[]> steps = AutoSolveService.solve(colorButtons.length, widthPlaces - 2, sequence);
 			for(int i=0; i<lengthPlaces; i++){
 				for(int j=0; j<widthPlaces-2; j++){
