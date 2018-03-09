@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import com.polytechtours.fr.di5.mastermind.service.AutoSolveService;
 import com.polytechtours.fr.di5.mastermind.service.CalculateService;
 import com.polytechtours.fr.di5.mastermind.util.Constant;
 import com.polytechtours.fr.di5.mastermind.util.JCircleButton;
@@ -182,6 +184,7 @@ public class MainWindow extends JFrame implements ActionListener {
 		solveButton.setFont(f_button);
 		solveButton.setBackground(new Color(160, 82, 45));
 		solveButton.setForeground(Color.WHITE);
+		solveButton.addActionListener(this);
 
 		// verify button
 		verifyButton = new JButton("Verify the current line");
@@ -437,6 +440,47 @@ public class MainWindow extends JFrame implements ActionListener {
 					}
 				}
 			}
+		}
+		
+		// click of the solve button
+		if(e.getSource().equals(solveButton)){
+			ArrayList<int[]> steps = AutoSolveService.solve(colorButtons.length, widthPlaces - 2, sequence);
+			for(int i=0; i<lengthPlaces; i++){
+				for(int j=0; j<widthPlaces-2; j++){
+					choices[i][j] = 0;
+				}
+			}
+			currentRow = 0;
+			currentCol = 1;
+			
+			for(int i=0; i<steps.size(); i++){
+				for(int j=0; j<steps.get(i).length; j++){
+					choices[i][j] = steps.get(i)[j];
+				}
+			}
+			
+			for(int i=0; i<lengthPlaces; i++){
+				for(int j=1; j<widthPlaces-1; j++){
+					ImageIcon icon = new ImageIcon("img/"+choices[i][j-1]+".gif");
+					places[i][j].setIcon(icon);
+				}
+				if(choices[i][0] != 0){
+					HashMap<String, Integer> eval = CalculateService.evaluate(sequence, choices[i], colorButtons.length);
+					int hit = eval.get("hit");
+					int pseudoHit = eval.get("pseudoHit");
+					places[i][widthPlaces - 1].setIcon(null);
+					places[i][widthPlaces - 1].setText("H="+hit+","+"P="+pseudoHit);
+				}
+			}
+			
+			for(int i=1; i<solution.length; i++){
+				ImageIcon icon = new ImageIcon("img/"+sequence[i-1]+".gif");
+				solution[i].setIcon(icon);
+			}
+			
+			JOptionPane.showMessageDialog(null, "Computer solved the problem!", "Information", JOptionPane.INFORMATION_MESSAGE);
+			
+			solved = true;
 		}
 
 		// click of color buttons
