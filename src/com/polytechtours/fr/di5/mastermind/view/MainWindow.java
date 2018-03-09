@@ -388,7 +388,7 @@ public class MainWindow extends JFrame implements ActionListener {
 		// click of restart button
 		if (e.getSource().equals(restartButton)) {
 			this.dispose();
-			MainWindow window = new MainWindow(this.typeGame);
+			ChooseDifficultyWindow window = new ChooseDifficultyWindow();
 			window.setVisible(true);
 		}
 
