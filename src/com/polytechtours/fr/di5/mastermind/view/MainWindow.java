@@ -138,13 +138,13 @@ public class MainWindow extends JFrame implements ActionListener {
 		// title label
 		titleLabel = new JLabel("", JLabel.CENTER);
 		if (this.typeGame == Constant.EASY_MODE) {
-			titleLabel.setText("Mastermind V1.0 - easy");
+			titleLabel.setText("Mastermind V2.0 - easy");
 		}
 		if (this.typeGame == Constant.NORMAL_MODE) {
-			titleLabel.setText("Mastermind V1.0 - normal");
+			titleLabel.setText("Mastermind V2.0 - normal");
 		}
 		if (this.typeGame == Constant.HARD_MODE) {
-			titleLabel.setText("Mastermind V1.0 - hard");
+			titleLabel.setText("Mastermind V2.0 - hard");
 		}
 		titleLabel.setBounds(100, 20, 300, 50);
 		Font f_title = new Font("calibri", Font.BOLD, 25);
