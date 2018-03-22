@@ -2,8 +2,27 @@ package com.polytechtours.fr.di5.mastermind.service;
 
 import java.util.HashMap;
 
+/**
+ * Class to provide evaluate service to evaluate one step of test<br>
+ * 
+ * @author Boyang Wang
+ * @version 1.0
+ *
+ */
 public class CalculateService {
 
+	/**
+	 * function to evaluate one step of test
+	 * 
+	 * @param sequence the solution sequence to find
+	 * @param choice the test sequence of user
+	 * @param numColor number of colors
+	 * @return hashmap with two entries:
+	 * 		   <ul>
+	 * 			<li>key:hit to present the number of hit</li>
+	 * 			<li>key:pseudoHit to present the number of pseudo hit</li>
+	 *         </ul>
+	 */
 	public static HashMap<String, Integer> evaluate(int[] sequence, int[] choice, int numColor) {
 
 		int len = sequence.length;

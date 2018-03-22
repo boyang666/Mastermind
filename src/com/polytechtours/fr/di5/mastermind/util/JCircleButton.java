@@ -2,16 +2,18 @@ package com.polytechtours.fr.di5.mastermind.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
  
 /**
- * make a circle button
+ * Class to make a circle button used by colors
+ * 
+ * @author Boyang Wang
+ * @version 1.0
+ * 
  */
 public class JCircleButton extends JButton {
  
@@ -20,6 +22,10 @@ public class JCircleButton extends JButton {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * constructor
+	 * @param label text of label
+	 */
 	public JCircleButton(String label) {
         super(label);
  
@@ -31,7 +37,9 @@ public class JCircleButton extends JButton {
         setContentAreaFilled(false);
     }
  
-    // draw the background and label 
+	/**
+	 * draw the background and label 
+	 */ 
     protected void paintComponent(Graphics g) {
  
         if (getModel().isArmed()) {
@@ -45,15 +53,22 @@ public class JCircleButton extends JButton {
         super.paintComponent(g);
     }
  
-    // draw the border
+    /**
+     * draw the border
+     */
     protected void paintBorder(Graphics g) {
         g.setColor(Color.white);
         g.drawOval(0, 0, getSize().width - 1, getSize().height - 1);
     }
  
-    // keep the shape for listener
+    /**
+     * keep the shape for listener
+     */
     Shape shape;
  
+    /**
+     * to verify if clicked in range
+     */
     public boolean contains(int x, int y) {
  
         if ((shape == null) || (!shape.getBounds().equals(getBounds()))) {
@@ -62,19 +77,6 @@ public class JCircleButton extends JButton {
         }
         // to verify if the location is in the circle
         return shape.contains(x, y);
-    }
- 
-    public static void main(String[] args) {
-        JButton button = new JCircleButton("");
-        button.setBackground(Color.orange);
- 
-        JFrame frame = new JFrame("circle button");
-        frame.getContentPane().setBackground(Color.pink);
-        frame.getContentPane().setLayout(new FlowLayout());
-        frame.getContentPane().add(button);
-        frame.setSize(200, 200);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
  
 }

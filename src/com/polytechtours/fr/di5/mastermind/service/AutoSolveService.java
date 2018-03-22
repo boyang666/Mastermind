@@ -4,8 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * Class to provide the auto-solve service<br>
+ * A method is offered to solve a mastermind problem in less than 10 steps<br>
+ * Two strategies are introduced to generate the next combination:
+ * <ul>
+ * <li>Random a combination in the set to choose as the next one</li>
+ * <li>Use max-min strategy to choose the next one</li>
+ * </ul> 
+ * 
+ * Both these two methods give a solution in less than 10 steps.<br>
+ * Randomize is more rapid than Max-min.
+ * 
+ * @author Boyang Wang
+ * @version 2.0
+ *
+ */
 public class AutoSolveService {
 
+	/**
+	 * method to auto-solve a mastermind problem within 10 steps
+	 * 
+	 * @param numColor number of colors
+	 * @param numPlace number of places within one step
+	 * @param sequence the sequence to get at the end
+	 * @return list of int[] with all steps int it
+	 */
 	public static ArrayList<int[]> solve(int numColor, int numPlace, int[] sequence){
 		
 		// initialize the set of all possible combinations
@@ -38,11 +62,14 @@ public class AutoSolveService {
 		// start the loop
 		do{
 			result = CalculateService.evaluate(sequence, combination, numColor);
+			
+			//get number of hit and pseudo hit
 			hit = result.get("hit");
 			if(hit == numPlace)break;
 			pseudoHit = result.get("pseudoHit");
 			indexToDelete.clear();
 			
+			// find all combinations which have different compare result with the one chosen
 			for(int i=0; i<combinations.size(); i++){
 				eval = CalculateService.evaluate(combination, combinations.get(i), numColor);
 				if(eval.get("hit").intValue() != hit || eval.get("pseudoHit").intValue() != pseudoHit){
@@ -50,32 +77,40 @@ public class AutoSolveService {
 				}
 			}
 			
+			// delete these combinations
 			for(int j=indexToDelete.size() - 1; j>=0; j--){
 				combinations.remove(indexToDelete.get(j).intValue());
 			}
 			
-			int next = chooseNext(combinations, numColor);
+			// choose next combination
+			int next = chooseNext(combinations);
 			combination = combinations.get(next);
 			steps.add(combination);
 			combinations.remove(next);
 			
-			StringBuilder str = new StringBuilder("");
-			for(int k=0; k<combination.length; k++){
-				str.append(combination[k]).append(",");
-			}
-			System.out.println(str.toString());
 		}
 		while(hit != numPlace && !combinations.isEmpty());
 
 		return steps;
 	}
 	
+	/**
+	 * Random strategy to choose next combination
+	 * @param combinations all combinations remaining in the set
+	 * @return index of next combination
+	 */
 	public static int chooseNext(ArrayList<int[]> combinations){
 		Random random = new Random();
 		int index = random.nextInt(combinations.size());
 		return index;
 	}
 	
+	/**
+	 * Max-min strategy to choose next combination
+	 * @param combinations all combinations remaining in the set
+	 * @param numColor number of colors
+	 * @return index of next combination
+	 */
 	public static int chooseNext(ArrayList<int[]> combinations, int numColor){
 		
 		// to stock all minimum count 
@@ -123,17 +158,5 @@ public class AutoSolveService {
 		}
 		
 		return index;
-	}
-	
-	public static void main(String[] args){
-		int[] array = {1,2,3,4,5,6};
-		ArrayList<int[]> result = AutoSolveService.solve(6, 6, array); 
-		for(int i=0; i<result.size(); i++){
-			StringBuilder str = new StringBuilder("");
-			for(int j=0; j<result.get(i).length; j++){
-				str.append(result.get(i)[j]).append(" ");
-			}
-			System.out.println(str.toString());
-		}
 	}
 }

@@ -57,7 +57,7 @@ public class ChooseDifficultyWindow extends JFrame implements ActionListener {
 	 */
 	public void initUI() {
 		// title label
-		titleLabel = new JLabel("Mastermind V1.0", JLabel.CENTER);
+		titleLabel = new JLabel("Mastermind V2.0", JLabel.CENTER);
 		titleLabel.setBounds(100, 30, 300, 60);
 		Font f_title = new Font("calibri", Font.BOLD, 25);
 		titleLabel.setFont(f_title);

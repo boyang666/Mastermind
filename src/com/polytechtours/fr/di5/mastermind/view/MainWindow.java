@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -19,6 +20,12 @@ import com.polytechtours.fr.di5.mastermind.service.CalculateService;
 import com.polytechtours.fr.di5.mastermind.util.Constant;
 import com.polytechtours.fr.di5.mastermind.util.JCircleButton;
 
+/**
+ * Main window to play the game
+ * @author Boyang Wang
+ * @version 2.0
+ *
+ */
 public class MainWindow extends JFrame implements ActionListener {
 
 	/**
@@ -113,6 +120,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
 	/**
 	 * constructor
+	 * @param typeGame type of game
 	 */
 	public MainWindow(int typeGame) {
 		super("Mastermind");
@@ -127,12 +135,12 @@ public class MainWindow extends JFrame implements ActionListener {
 		initSequence();
 		currentRow = 0;
 		currentCol = 1;
-		for (int i = 0; i < sequence.length; i++) {
-			// System.out.println(sequence[i]);
-		}
 		solved = false;
 	}
 
+	/**
+	 * initiation of UI
+	 */
 	public void initUI() {
 
 		// title label
@@ -259,7 +267,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			places = new JLabel[lengthPlaces][widthPlaces];
 			int xStart = 80;
 			int yStart = 260;
-			String path = "img/0.gif";
+			URL path = this.getClass().getResource("/img/0.gif");
 			for (int i = 0; i < lengthPlaces; i++) {
 				for (int j = 0; j < widthPlaces; j++) {
 					places[i][j] = new JLabel("", JLabel.CENTER);
@@ -276,7 +284,7 @@ public class MainWindow extends JFrame implements ActionListener {
 						places[i][j].setSize(120, 50);
 						places[i][j].setText("");
 						places[i][j].setFont(f_num);
-						ImageIcon imageHit = new ImageIcon("img/hit.gif");
+						ImageIcon imageHit = new ImageIcon(this.getClass().getResource("/img/hit.gif"));
 						places[i][j].setIcon(imageHit);
 					}
 
@@ -288,7 +296,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			places = new JLabel[lengthPlaces][widthPlaces];
 			int xStart = 20;
 			int yStart = 260;
-			String path = "img/0.gif";
+			URL path = this.getClass().getResource("/img/0.gif");
 			for (int i = 0; i < lengthPlaces; i++) {
 				for (int j = 0; j < widthPlaces; j++) {
 					places[i][j] = new JLabel("", JLabel.CENTER);
@@ -305,7 +313,7 @@ public class MainWindow extends JFrame implements ActionListener {
 						places[i][j].setSize(120, 50);
 						places[i][j].setText("");
 						places[i][j].setFont(f_num);
-						ImageIcon imageHit = new ImageIcon("img/hit.gif");
+						ImageIcon imageHit = new ImageIcon(this.getClass().getResource("/img/hit.gif"));
 						places[i][j].setIcon(imageHit);
 					}
 
@@ -325,7 +333,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			xStart = 40;
 		}
 		solution[0].setBounds(xStart, 800, 100, 50);
-		ImageIcon img = new ImageIcon("img/sol.gif");
+		ImageIcon img = new ImageIcon(this.getClass().getResource("/img/sol.gif"));
 		for (int i = 1; i < solution.length; i++) {
 			solution[i] = new JLabel();
 			solution[i].setIcon(img);
@@ -362,6 +370,9 @@ public class MainWindow extends JFrame implements ActionListener {
 		this.setLocationRelativeTo(null);
 	}
 
+	/**
+	 * initiation of sequence to solve
+	 */
 	public void initSequence() {
 		Random random = new Random();
 		if (typeGame == Constant.EASY_MODE) {
@@ -394,7 +405,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
 		// click of clear line button
 		if (e.getSource().equals(clearLineButton) && !solved) {
-			String path = "img/0.gif";
+			URL path = this.getClass().getResource("/img/0.gif");
 			ImageIcon image = new ImageIcon(path);
 			for (int j = 0; j < widthPlaces; j++) {
 				if (j > 0 && j < widthPlaces - 1) {
@@ -426,7 +437,7 @@ public class MainWindow extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "Bravo! You win the game with " + currentRow + " steps!",
 							"Success", JOptionPane.INFORMATION_MESSAGE);
 					for (int i = 1; i < solution.length; i++) {
-						ImageIcon icon = new ImageIcon("img/" + sequence[i - 1] + ".gif");
+						ImageIcon icon = new ImageIcon(this.getClass().getResource("/img/" + sequence[i - 1] + ".gif"));
 						solution[i].setIcon(icon);
 					}
 				}
@@ -435,7 +446,7 @@ public class MainWindow extends JFrame implements ActionListener {
 					solved = true;
 					JOptionPane.showMessageDialog(null, "Sorry! Gamo over!", "Fail", JOptionPane.INFORMATION_MESSAGE);
 					for (int i = 1; i < solution.length; i++) {
-						ImageIcon icon = new ImageIcon("img/" + sequence[i - 1] + ".gif");
+						ImageIcon icon = new ImageIcon(this.getClass().getResource("/img/" + sequence[i - 1] + ".gif"));
 						solution[i].setIcon(icon);
 					}
 				}
@@ -444,7 +455,11 @@ public class MainWindow extends JFrame implements ActionListener {
 		
 		// click of the solve button
 		if(e.getSource().equals(solveButton) && !solved){
+			
+			// auto solve the problem with steps
 			ArrayList<int[]> steps = AutoSolveService.solve(colorButtons.length, widthPlaces - 2, sequence);
+			
+			// initialize the table
 			for(int i=0; i<lengthPlaces; i++){
 				for(int j=0; j<widthPlaces-2; j++){
 					choices[i][j] = 0;
@@ -453,15 +468,17 @@ public class MainWindow extends JFrame implements ActionListener {
 			currentRow = 0;
 			currentCol = 1;
 			
+			// get the steps
 			for(int i=0; i<steps.size(); i++){
 				for(int j=0; j<steps.get(i).length; j++){
 					choices[i][j] = steps.get(i)[j];
 				}
 			}
 			
+			// to update the display
 			for(int i=0; i<lengthPlaces; i++){
 				for(int j=1; j<widthPlaces-1; j++){
-					ImageIcon icon = new ImageIcon("img/"+choices[i][j-1]+".gif");
+					ImageIcon icon = new ImageIcon(this.getClass().getResource("/img/"+choices[i][j-1]+".gif"));
 					places[i][j].setIcon(icon);
 				}
 				if(choices[i][0] != 0){
@@ -473,8 +490,9 @@ public class MainWindow extends JFrame implements ActionListener {
 				}
 			}
 			
+			// update display of solution
 			for(int i=1; i<solution.length; i++){
-				ImageIcon icon = new ImageIcon("img/"+sequence[i-1]+".gif");
+				ImageIcon icon = new ImageIcon(this.getClass().getResource("/img/"+sequence[i-1]+".gif"));
 				solution[i].setIcon(icon);
 			}
 			
@@ -488,7 +506,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			if (e.getSource().equals(colorButtons[i]) && !solved) {
 				int currentColor = i + 1;
 				if (currentCol != widthPlaces - 1) {
-					ImageIcon img = new ImageIcon("img/" + currentColor + ".gif");
+					ImageIcon img = new ImageIcon(this.getClass().getResource("/img/" + currentColor + ".gif"));
 					places[currentRow][currentCol].setIcon(img);
 					choices[currentRow][currentCol - 1] = currentColor;
 					currentCol++;
